@@ -1,5 +1,21 @@
 use rand::{thread_rng, Rng};
-use std::io::stdin;
+use std::{fmt, io::stdin};
+
+//newtype
+struct Range(core::ops::Range<u64>);
+
+//为结构体Range实现Display特征
+impl fmt::Display for Range {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "[{}, {}]", self.0.start, self.0.end - 1)
+    }
+}
+
+impl Range {
+    fn new(r: core::ops::Range<u64>) -> Range {
+        Range(r)
+    }
+}
 
 fn main() {
     let mut range = 1u64..101u64;
@@ -24,7 +40,7 @@ fn main() {
 fn set_range(range: &mut core::ops::Range<u64>) {
     let mut start = String::new();
     let mut end = String::new();
-    println!("当前随机数范围[{},{}]", range.start, range.end - 1);
+    println!("当前随机数范围{}", Range::new(range.clone()));
     println!("请输入要设置的最小值: ");
     stdin().read_line(&mut start).unwrap();
     let start = start[..].trim_end().parse::<u64>().expect("解析数字失败！");
@@ -32,7 +48,7 @@ fn set_range(range: &mut core::ops::Range<u64>) {
     stdin().read_line(&mut end).unwrap();
     let end = end[..].trim_end().parse::<u64>().expect("解析数字失败！");
     *range = start..(end + 1);
-    println!("当前随机数范围[{},{}]", range.start, range.end - 1);
+    println!("当前随机数范围{}", Range::new(range.clone()));
 }
 
 //开始游戏
